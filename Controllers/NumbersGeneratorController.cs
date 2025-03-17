@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderingCompare.Domain.Interfaces;
-using System.Text;
+using OrderingCompare.Sorting;
 
 namespace OrderingCompare.Controllers
 {
@@ -27,6 +27,23 @@ namespace OrderingCompare.Controllers
         {
             var conteudo = _numeroService.LerArquivo();
             return Ok(conteudo);
+        }
+
+        [HttpPost("ordenar")]
+        public IActionResult OrdenarNumeros([FromQuery] string algoritmo)
+        {
+            var numeros = _numeroService.LerArquivo();
+            ISortingStrategy sortingStrategy = algoritmo.ToLower() switch
+            {
+                "bubble" => new BubbleSortStrategy(),
+                "bubble-optimized" => new BubbleSortOptimizedStrategy(),
+                "insertion" => new InsertionSortStrategy(),
+                "selection" => new SelectionSortStrategy(),
+                _ => throw new ArgumentException("Algoritmo de ordenação desconhecido")
+            };
+
+            var numerosOrdenados = _numeroService.OrdenarNumeros(numeros, sortingStrategy);
+            return Ok(numerosOrdenados);
         }
     }
 }

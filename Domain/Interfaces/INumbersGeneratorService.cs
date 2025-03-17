@@ -3,6 +3,7 @@
     public interface INumbersGeneratorService
     {
         void GerarArquivo(int quantidade, string tipoArquivo);
-        string LerArquivo();
+        int[] LerArquivo();
+        int[] OrdenarNumeros(int[] numeros, ISortingStrategy sortingStrategy);
     }
 }
