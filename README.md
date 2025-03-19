@@ -1,4 +1,5 @@
 # README - Projeto Ordering Compare
+Integrantes: Matheus G. da Silva, Larissa Hoffmann, Lukas Thiago Rodrigues, Mateus Akira.
 
 ## Descrição
 O projeto Ordering Compare é uma API para geração, leitura e ordenação de números usando diferentes algoritmos de ordenação. Ele implementa o padrão Strategy para permitir a seleção dinâmica do algoritmo de ordenação desejado.
