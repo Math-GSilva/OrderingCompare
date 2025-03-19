@@ -39,10 +39,22 @@ namespace OrderingCompare.Controllers
                 "bubble-optimized" => new BubbleSortOptimizedStrategy(),
                 "insertion" => new InsertionSortStrategy(),
                 "selection" => new SelectionSortStrategy(),
+                "counting" => new CountingSortStrategy(),
+                "heap" => new HeapSortStrategy(),
+                "merge" => new MergeSortStrategy(),
+                "quick" => new QuickSortStrategy(),
+                "radix" => new RadixSortStrategy(),
+                "shell" => new ShellSortStrategy(),
+                "tim" => new TimSortStrategy(),
                 _ => throw new ArgumentException("Algoritmo de ordenação desconhecido")
             };
 
-            var numerosOrdenados = _numeroService.OrdenarNumeros(numeros, sortingStrategy);
+            var numerosOrdenados = Array.Empty<int>();
+            for (int i = 0; i < 10; i++)
+            {
+                numeros = _numeroService.LerArquivo();
+                numerosOrdenados = _numeroService.OrdenarNumeros(numeros, sortingStrategy);
+            }
             return Ok(numerosOrdenados);
         }
     }

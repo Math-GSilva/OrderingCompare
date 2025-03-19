@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using OrderingCompare.Domain.Interfaces;
+using Serilog;
 
 namespace OrderingCompare.Sorting
 {
@@ -18,9 +19,8 @@ namespace OrderingCompare.Sorting
             TimSort(array, array.Length, ref comparisons, ref swapCount);
             stopwatch.Stop();
 
-            Console.WriteLine($"Tempo de execução: {stopwatch.Elapsed.TotalMilliseconds} ms");
-            Console.WriteLine($"Quantidade de comparações: {comparisons}");
-            Console.WriteLine($"Quantidade de trocas: {swapCount}");
+            Log.Information("Ordenação concluída pelo algoritmo {Algoritmo} em {TempoExecucao}ms, Comparações: {Comparacoes}, Trocas: {Trocas}, Tamanho do Array: {TamanhoArray}",
+                "TimSort", stopwatch.Elapsed.Microseconds, comparisons, swapCount, array.Length);
         }
 
         private void TimSort(int[] array, int n, ref int comparisons, ref int swapCount)

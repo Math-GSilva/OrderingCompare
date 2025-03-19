@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using OrderingCompare.Domain.Interfaces;
+using Serilog;
 
 namespace OrderingCompare.Sorting
 {
@@ -9,32 +10,50 @@ namespace OrderingCompare.Sorting
         public void Sort(int[] array)
         {
             int comparisons = 0;
-            int switchs = 0;
-            Stopwatch time = new Stopwatch();
+            int swapCount = 0;
+            Stopwatch stopwatch = new Stopwatch();
 
-            time.Start();
-            MergeSort(array, 0, array.Length - 1, ref comparisons, ref switchs);
-            time.Stop();
+            stopwatch.Start();
 
-            Console.WriteLine($"Tempo de execução: {time.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Quantidade de comparações: {comparisons}");
-            Console.WriteLine($"Quantidade de trocas: {switchs}");
+            int left = 0;
+            int right = array.Length - 1;
+
+            if (left < right)
+            {
+                int mid = left + (right - left) / 2;
+
+                if (left < mid)
+                {
+                    MergeSort(array, left, mid, ref comparisons, ref swapCount);
+                }
+                if (mid + 1 < right)
+                {
+                    MergeSort(array, mid + 1, right, ref comparisons, ref swapCount);
+                }
+
+                Merge(array, left, mid, right, ref comparisons, ref swapCount);
+            }
+
+            stopwatch.Stop();
+
+            Log.Information("Ordenação concluída pelo algoritmo {Algoritmo} em {TempoExecucao} microssegundos, Comparações: {Comparacoes}, Trocas: {Trocas}, Tamanho do Array: {TamanhoArray}",
+                "MergeSort", stopwatch.Elapsed.Microseconds, comparisons, swapCount, array.Length);
         }
 
-        private void MergeSort(int[] array, int left, int right, ref int comparisons, ref int switchs)
+        private void MergeSort(int[] array, int left, int right, ref int comparisons, ref int swapCount)
         {
             if (left < right)
             {
                 int mid = left + (right - left) / 2;
 
-                MergeSort(array, left, mid, ref comparisons, ref switchs);
-                MergeSort(array, mid + 1, right, ref comparisons, ref switchs);
+                MergeSort(array, left, mid, ref comparisons, ref swapCount);
+                MergeSort(array, mid + 1, right, ref comparisons, ref swapCount);
 
-                Merge(array, left, mid, right, ref comparisons, ref switchs);
+                Merge(array, left, mid, right, ref comparisons, ref swapCount);
             }
         }
 
-        private void Merge(int[] array, int left, int mid, int right, ref int comparisons, ref int switchs)
+        private void Merge(int[] array, int left, int mid, int right, ref int comparisons, ref int swapCount)
         {
             int n1 = mid - left + 1;
             int n2 = right - mid;
@@ -46,6 +65,7 @@ namespace OrderingCompare.Sorting
             Array.Copy(array, mid + 1, rightArray, 0, n2);
 
             int i = 0, j = 0, k = left;
+
             while (i < n1 && j < n2)
             {
                 comparisons++;
@@ -58,17 +78,18 @@ namespace OrderingCompare.Sorting
                 {
                     array[k] = rightArray[j];
                     j++;
-                    switchs++;
+                    swapCount++; // Contabilizando as trocas
                 }
                 k++;
             }
 
+            // Copiando os elementos restantes
             while (i < n1)
             {
                 array[k] = leftArray[i];
                 i++;
                 k++;
-                switchs++;
+                swapCount++;
             }
 
             while (j < n2)
@@ -76,7 +97,7 @@ namespace OrderingCompare.Sorting
                 array[k] = rightArray[j];
                 j++;
                 k++;
-                switchs++;
+                swapCount++;
             }
         }
     }

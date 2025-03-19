@@ -1,10 +1,13 @@
 using OrderingCompare.Domain.Interfaces;
 using OrderingCompare.Domain.Services;
 using Serilog;
+using Serilog.Formatting.Elasticsearch;
 using Serilog.Sinks.Elasticsearch;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -20,7 +23,7 @@ builder.Host.UseSerilog((context, config) =>
           .WriteTo.Console()
           .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
           {
-              IndexFormat = "dotnet-logs-{0:yyyy.MM.dd}",
+              IndexFormat = "dotnet-logs",
               AutoRegisterTemplate = true,
               OverwriteTemplate = true,
               ModifyConnectionSettings = conn => conn.BasicAuthentication("elastic", "gFo0Vj4+-AvytNLgqlbf")

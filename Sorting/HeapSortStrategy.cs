@@ -1,34 +1,26 @@
 using System;
 using System.Diagnostics;
 using OrderingCompare.Domain.Interfaces;
+using Serilog;
 
 namespace OrderingCompare.Sorting
 {
     public class HeapSortStrategy : ISortingStrategy
     {
-        public int[] Sort(int[] array)
+        public void Sort(int[] array)
         {
             int comparisons = 0;
             int swapCount = 0;
             Stopwatch stopwatch = new Stopwatch();
 
             stopwatch.Start();
-            HeapSort(array, ref comparisons, ref swapCount);
-            stopwatch.Stop();
 
-            Console.WriteLine($"Tempo de execução: {stopwatch.Elapsed.TotalMilliseconds} ms");
-            Console.WriteLine($"Quantidade de comparações: {comparisons}");
-            Console.WriteLine($"Quantidade de trocas: {swapCount}");
-
-            return array;
-        }
-
-        private void HeapSort(int[] array, ref int comparisons, ref int swapCount)
-        {
             int n = array.Length;
 
             for (int i = n / 2 - 1; i >= 0; i--)
+            {
                 Heapify(array, n, i, ref comparisons, ref swapCount);
+            }
 
             for (int i = n - 1; i > 0; i--)
             {
@@ -37,6 +29,11 @@ namespace OrderingCompare.Sorting
 
                 Heapify(array, i, 0, ref comparisons, ref swapCount);
             }
+
+            stopwatch.Stop();
+
+            Log.Information("Ordenação concluída pelo algoritmo {Algoritmo} em {TempoExecucao} microssegundos, Comparações: {Comparacoes}, Trocas: {Trocas}, Tamanho do Array: {TamanhoArray}",
+                "HeapSort", stopwatch.ElapsedTicks / (Stopwatch.Frequency / 1000000), comparisons, swapCount, array.Length);
         }
 
         private void Heapify(int[] array, int n, int i, ref int comparisons, ref int swapCount)

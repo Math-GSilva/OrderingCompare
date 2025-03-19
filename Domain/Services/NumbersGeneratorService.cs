@@ -5,7 +5,7 @@ namespace OrderingCompare.Domain.Services
 {
     public class NumbersGeneratorService : INumbersGeneratorService
     {
-        private readonly string _filePath = "numeros.txt";
+        private readonly string _filePath = "numeros.csv";
 
         public void GerarArquivo(int quantidade, string tipoArquivo)
         {

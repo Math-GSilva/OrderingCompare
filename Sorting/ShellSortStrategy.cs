@@ -1,32 +1,22 @@
 using System;
 using System.Diagnostics;
 using OrderingCompare.Domain.Interfaces;
+using Serilog;
 
 namespace OrderingCompare.Sorting
 {
     public class ShellSortStrategy : ISortingStrategy
     {
-        public int[] Sort(int[] array)
+        public void Sort(int[] array)
         {
-            int comparisons = 0;  
-            int swapCount = 0;   
+            int comparisons = 0;
+            int swapCount = 0;
             Stopwatch stopwatch = new Stopwatch();
 
             stopwatch.Start();
-            int[] sortedArray = ShellSort(array, ref comparisons, ref swapCount);
-            stopwatch.Stop();
 
-            Console.WriteLine($"Tempo de execução: {stopwatch.Elapsed.TotalMilliseconds} ms");
-            Console.WriteLine($"Quantidade de comparações: {comparisons}");
-            Console.WriteLine($"Quantidade de trocas: {swapCount}");
-
-            return sortedArray;
-        }
-
-        private int[] ShellSort(int[] array, ref int comparisons, ref int swapCount)
-        {
             int n = array.Length;
-            int gap = n / 2; 
+            int gap = n / 2;
 
             while (gap > 0)
             {
@@ -39,16 +29,19 @@ namespace OrderingCompare.Sorting
                     {
                         array[j] = array[j - gap];
                         j -= gap;
-                        comparisons++;  
-                        swapCount++;   
+                        comparisons++;
+                        swapCount++;
                     }
                     array[j] = temp;
                 }
 
-                gap /= 2; 
+                gap /= 2;
             }
 
-            return array;
+            stopwatch.Stop();
+
+            Log.Information("Ordenação concluída pelo algoritmo {Algoritmo} em {TempoExecucao}ms, Comparações: {Comparacoes}, Trocas: {Trocas}, Tamanho do Array: {TamanhoArray}",
+                "ShellSort", stopwatch.Elapsed.Microseconds, comparisons, swapCount, array.Length);
         }
     }
 }

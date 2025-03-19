@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using OrderingCompare.Domain.Interfaces;
+using Serilog;
 
 namespace OrderingCompare.Sorting
 {
@@ -28,10 +29,9 @@ namespace OrderingCompare.Sorting
                 }
             }
             time.Stop();
-            
-            Console.WriteLine($"Tempo de execução: {time.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Quantidade de comparações: {comparisons}");
-            Console.WriteLine($"Quantidade de trocas: {switchs}");
+
+            Log.Information("Ordenação concluída pelo algoritmo {Algoritmo} em {TempoExecucao} microssegundos, Comparações: {Comparacoes}, Trocas: {Trocas}, Tamanho do Array: {TamanhoArray}",
+                "BubbleSort", time.Elapsed.Microseconds, comparisons, switchs, n);
         }
     }
 }
