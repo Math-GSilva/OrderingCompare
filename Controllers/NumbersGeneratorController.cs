@@ -46,15 +46,13 @@ namespace OrderingCompare.Controllers
                 "radix" => new RadixSortStrategy(),
                 "shell" => new ShellSortStrategy(),
                 "tim" => new TimSortStrategy(),
+                "selectionparallel" => new SelectionSortParallel(),
+                "countingparallel" => new CountingSortParallel(),
+                "quickparallel" => new QuickSortParallel(),
                 _ => throw new ArgumentException("Algoritmo de ordenação desconhecido")
             };
 
-            var numerosOrdenados = Array.Empty<int>();
-            for (int i = 0; i < 10; i++)
-            {
-                numeros = _numeroService.LerArquivo();
-                numerosOrdenados = _numeroService.OrdenarNumeros(numeros, sortingStrategy);
-            }
+            var numerosOrdenados = _numeroService.OrdenarNumeros(numeros, new SelectionSortStrategy());
             return Ok(numerosOrdenados);
         }
     }
